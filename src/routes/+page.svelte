@@ -104,10 +104,13 @@
 </p>
 
 <button on:click={fetchNews}>get berita</button>
-<br>
-read more about this project at <a href="https://github.com/dansvel/monitoring-berita">https://github.com/dansvel/monitoring-berita</a>
-<hr>
-<br>
+<br />
+read more about this project at
+<a href="https://github.com/dansvel/monitoring-berita"
+  >https://github.com/dansvel/monitoring-berita</a
+>
+<hr />
+<br />
 {#if feeds.length}
   {#each feeds as feed (feed.link)}
     {#if feed.items.length}

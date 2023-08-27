@@ -1,5 +1,6 @@
-
 import parse from 'rss-to-json'
+
+// export const prerender = true
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
