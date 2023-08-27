@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit'
+
 import { parse } from 'rss-to-json'
 
 /** @type {import('./$types').RequestHandler} */
