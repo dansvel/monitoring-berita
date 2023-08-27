@@ -1,4 +1,5 @@
 import parse from 'rss-to-json'
+import { json } from '@sveltejs/kit'
 
 // export const prerender = true
 
@@ -25,5 +26,5 @@ export async function POST({ request }) {
     // console.log('selesai', new Date())
   })
 
-  return new Response(JSON.stringify(feeds))
+  return new Response(json(feeds))
 }
