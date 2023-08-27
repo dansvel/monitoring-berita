@@ -7,6 +7,7 @@ untuk saat ini yang penting jalan aja dulu,,
 ### todo list
 
 - [ ] styling
+- [ ] loading indicator
 - [ ] inputan list url feed
 - [ ] inputan diganti jadi range tanggal aja
 - [ ] tambahkan inputan keyword
