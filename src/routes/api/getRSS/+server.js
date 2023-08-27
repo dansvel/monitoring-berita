@@ -26,5 +26,5 @@ export async function POST({ request }) {
     // console.log('selesai', new Date())
   })
 
-  return new Response(json(feeds))
+  return json(feeds)
 }
