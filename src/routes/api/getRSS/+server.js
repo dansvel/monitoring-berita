@@ -1,5 +1,5 @@
 
-import { parse } from 'rss-to-json'
+import parse from 'rss-to-json'
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
