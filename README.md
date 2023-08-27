@@ -1,6 +1,6 @@
 # aplikasi monitoring berita 
 
-dibuat menggunakan sveltekit
+dibuat untuk iseng, menggunakan sveltekit
 
 untuk saat ini yang penting jalan aja dulu,, 
 
