@@ -1,30 +1,5 @@
 <script>
-  import { onMount } from 'svelte'
-  import { parse } from 'rss-to-json'
-
-  const yangkenacors = [
-    'cuplik.com' // nggak bsa karena format rss bukan xml
-  ]
-
-  const yangnofeed = [
-    'jurnalnews.id',
-    'suarakarya.id',
-    'gatra.com',
-    // 'tribunjabar.id',
-    'indometro.id',
-    'suaraaktual.co',
-    'statusrakyat.com',
-    'rednews.my.id',
-    'netsembilan.com',
-    // 'kumparan.com',
-    'cirebonraya.com',
-    'detik.com/jabar',
-    'jurnalnews.id',
-    'jayantaranews.com',
-    'e-satu.com'
-  ]
-
-  const webs = [
+  let URLs = [
     'beritanyainfo.com',
     'bidiknasional.com',
     'ciremaitoday.com',
@@ -34,7 +9,6 @@
     'jurnalpelita.com',
     'kicaunews.com',
     'mhnews.id',
-    //// 'diskominfo.indramayukab.go.id',
     'mandalapos.co.id',
     'mediasuaramabes.com',
     'metropostnews.com',
@@ -44,22 +18,23 @@
     'tanganrakyat.id',
     'reformasi.co.id',
     'suarajurnalis.online',
-    //// 'indramayukab.go.id',
     'mpn.co.id',
     'fokuspantura.com',
     'kreatorjabar.com',
-
-    // yang cors udah bisa, mantap
     'mediasuaramabes.com',
-    // 'ringsatu.com',
     'min.co.id',
     'mabesbharindo.com'
+
+    //// 'diskominfo.indramayukab.go.id',
+    //// 'indramayukab.go.id',
+    // yang cors udah bisa, mantap
+    // 'ringsatu.com',
   ]
 
   let feeds = []
 
   function getDayName(dateStr) {
-    var date = new Date(dateStr)
+    const date = new Date(dateStr)
     return date.toLocaleDateString('id-ID', { weekday: 'long' })
   }
 
@@ -68,11 +43,10 @@
   let startDate
   $: {
     startDate = new Date()
-    startDate.setDate(startDate.getDate() - (getDayName(today) === 'Senin' ? -4 : -1) - dayoff)
+    startDate.setDate(startDate.getDate() - (getDayName(today) === 'Senin' ? 4 : 1) - dayoff)
     startDate.setHours(18, 0, 0)
     startDate = new Date(startDate)
   }
-
   export const localDateTime = new Intl.DateTimeFormat('id-ID', {
     year: 'numeric',
     month: 'short',
@@ -80,17 +54,39 @@
     hour: 'numeric',
     minute: 'numeric'
   })
-
   const fetchNews = async () => {
-    const response = await fetch('/api/getRSS', {
-      method: 'POST',
-      body: JSON.stringify({ startDate, URLs: webs }),
-      headers: {
-        'content-type': 'application/json'
-      }
-    })
-    feeds = await response.json()
+    const response = await Promise.all(
+      URLs.map(async URL => {
+        try {
+          const rss = await fetch(
+            'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2F' + URL + '%2Ffeed%2F'
+          )
+          if (!rss.ok) throw new Error(`Failed to fetch: ${rss.status}`)
+
+          let {
+            feed: { link },
+            items
+          } = await rss.json()
+
+          items = await items.filter(
+            item =>
+              item.description.match(/indramayu/gi) !== null &&
+              new Date(item.pubDate) > new Date(startDate)
+          )
+          if (items.length && items[0]?.title) {
+            feeds.push({ link, items })
+            feeds = feeds
+            // console.log('==================final=====================', feeds,'==================final=====================')
+          }
+        } catch (e) {
+          return { error: true, message: e }
+        }
+      })
+    )
+    console.log(response)
   }
+
+  $: console.log(feeds)
 </script>
 
 <input type="number" bind:value={dayoff} min="0" max="2" />
@@ -111,54 +107,81 @@ read more about this project at
 >
 <hr />
 <br />
-{#if feeds.length}
-  {#each feeds as feed (feed.link)}
-    {#if feed.items.length}
-      <table role="grid">
-        <thead>
-          <tr>
-            <th style="width:10%;min-width: 10%;max-width: 10%">NO</th>
-            <th style="width:25%;min-width: 25%;max-width: 25%">Judul Berita</th>
-            <!--          <th>waktu</th>-->
-            <th style="width:25%;min-width: 25%;max-width: 25%">Link</th>
-            <th style="width:20%;min-width: 20%;max-width: 20%">Wartawan</th>
-            <th style="width:20%;min-width: 20%;max-width: 20%">Kategori</th>
-          </tr>
-          <tr>
-            <th colspan="5" class="title"><a href={feed.link}>{feed.link}</a></th>
-          </tr>
-        </thead>
+<!--{#if feeds.length}-->
+{#each feeds as feed (feed.link)}
+  {#if feed.items.length}
+    <table role="grid">
+      <thead>
+        <tr>
+          <th>NO</th>
+          <th>Judul Berita</th>
+          <!--          <th>waktu</th>-->
+          <th>Link</th>
+          <th>Wartawan</th>
+          <th>Kategori</th>
+        </tr>
+        <tr>
+          <th colspan="5" class="title"><a href={feed.link}>{@html feed.link}</a></th>
+        </tr>
+      </thead>
 
-        <tbody>
-          {#each feed.items as item, i (item.id)}
-            <!--          <tr>-->
-            <!--            <td colspan="3">-->
-            <!--              {new Date(item.published)} | {new Date(new Date(item.published).setHours(0, 0, 0))}-->
+      <tbody>
+        {#each feed.items as item, i (item.link)}
+          <!--          <tr>-->
+          <!--            <td colspan="3">-->
+          <!--              {new Date(item.published)} | {new Date(new Date(item.published).setHours(0, 0, 0))}-->
+          <!--            </td>-->
+          <!--          </tr>-->
+          <tr>
+            <td class="text-center">{i + 1}</td>
+            <td>{item.title}</td>
+            <!--            <td>-->
+            <!--              <time>{localDateTime.format(new Date(item.published))}</time>-->
             <!--            </td>-->
-            <!--          </tr>-->
-            <tr>
-              <td class="text-center">{i + 1}</td>
-              <td>{item.title}</td>
-              <!--            <td>-->
-              <!--              <time>{localDateTime.format(new Date(item.published))}</time>-->
-              <!--            </td>-->
-              <td
-                ><a href={item.link.replace(/(#.*|\?.*)/, '')}
-                  >{item.link.replace(/(#.*|\?.*)/, '')}</a
-                ></td
-              >
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-      <p>&nbsp;</p>
-    {/if}
-  {/each}
+            <td
+              ><a href={item.link.replace(/(#.*|\?.*)/, '')}
+                >{@html item.link.replace(/(#.*|\?.*)/, '')}</a
+              ></td
+            >
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+    <p>&nbsp;</p>
+  {/if}
 {:else}
-  <p>tidak ada berita</p>
-{/if}
+  <table role="grid">
+    <thead>
+      <tr>
+        <th style="width:10%;min-width: 10%;max-width: 10%">NO</th>
+        <th style="width:25%;min-width: 25%;max-width: 25%">Judul Berita</th>
+        <!--          <th>waktu</th>-->
+        <th style="width:25%;min-width: 25%;max-width: 25%">Link</th>
+        <th style="width:20%;min-width: 20%;max-width: 20%">Wartawan</th>
+        <th style="width:20%;min-width: 20%;max-width: 20%">Kategori</th>
+      </tr>
+      <tr>
+        <th colspan="5" class="title">https://url</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+{/each}
+
+<!--{:else}-->
+<!--  <p>tidak ada berita</p>-->
+<!--{/if}-->
 
 <style>
   @media print, screen {
