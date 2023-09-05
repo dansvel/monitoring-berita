@@ -54,9 +54,10 @@
     hour: 'numeric',
     minute: 'numeric'
   })
+
   const fetchNews = async () => {
     const response = await Promise.all(
-      URLs.map(async URL => {
+      Array.from(new Set(URLs)).map(async URL => {
         try {
           const rss = await fetch(
             'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2F' + URL + '%2Ffeed%2F'
@@ -83,10 +84,10 @@
         }
       })
     )
-    console.log(response)
+    // console.log(response)
   }
 
-  $: console.log(feeds)
+  // $: console.log(feeds)
 </script>
 
 <input type="number" bind:value={dayoff} min="0" max="2" />
@@ -108,9 +109,9 @@ read more about this project at
 <hr />
 <br />
 <!--{#if feeds.length}-->
-{#each feeds as feed (feed.link)}
-  {#if feed.items.length}
-    <table role="grid">
+<table role="grid">
+  {#each feeds as feed (feed.link)}
+    {#if feed.items.length}
       <thead>
         <tr>
           <th>NO</th>
@@ -134,7 +135,7 @@ read more about this project at
           <!--          </tr>-->
           <tr>
             <td class="text-center">{i + 1}</td>
-            <td>{item.title}</td>
+            <td>{@html item.title}</td>
             <!--            <td>-->
             <!--              <time>{localDateTime.format(new Date(item.published))}</time>-->
             <!--            </td>-->
@@ -148,11 +149,9 @@ read more about this project at
           </tr>
         {/each}
       </tbody>
-    </table>
-    <p>&nbsp;</p>
-  {/if}
-{:else}
-  <table role="grid">
+      <p>&nbsp;</p>
+    {/if}
+  {:else}
     <thead>
       <tr>
         <th style="width:10%;min-width: 10%;max-width: 10%">NO</th>
@@ -176,8 +175,8 @@ read more about this project at
         <td>&nbsp;</td>
       </tr>
     </tbody>
-  </table>
-{/each}
+  {/each}
+</table>
 
 <!--{:else}-->
 <!--  <p>tidak ada berita</p>-->

@@ -8,11 +8,13 @@ untuk saat ini yang penting jalan aja dulu,,
 
 - [ ] styling
 - [ ] loading indicator
-- [ ] inputan list url feed
 - [ ] inputan diganti jadi range tanggal aja
 - [ ] tambahkan inputan keyword
-- [ ] tombol copy &/ download ke excel
 - [ ] multiple keyword
 - [ ] blacklist keyword
+- [ ] inputan bentuk list url feed
+- [ ] handle error
+- [ ] tombol copy &/ download ke excel
+- [ ] localstorage/db untuk hemat resource, fetch hari ini aja, lalu simpan di db, hari yang lebih lawas ambil dari db
 
 note: cuma side project, cuma bisa dikerjakan sewaktu senggang,, ngga usah nagih progress,,
