@@ -42,6 +42,7 @@
   const today = new Date()
   let startDate
   $: {
+    dayoff = dayoff < 0 ? 0 : dayoff > 2 ? 2 : dayoff
     startDate = new Date()
     startDate.setDate(startDate.getDate() - (getDayName(today) === 'Senin' ? 4 : 1) - dayoff)
     startDate.setHours(18, 0, 0)
@@ -90,7 +91,12 @@
   // $: console.log(feeds)
 </script>
 
-<input type="number" bind:value={dayoff} min="0" max="2" />
+<!--<input type="number" bind:value={dayoff}  />-->
+<select bind:value={dayoff}>
+  <option value={0} selected>0</option>
+  <option value={1}>1</option>
+  <option value={2}>2</option>
+</select>
 <p>
   mulai:
   <time>{localDateTime.format(startDate)}</time>
