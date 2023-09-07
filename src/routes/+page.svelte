@@ -66,7 +66,6 @@
           if (!rss.ok) throw new Error(`Failed to fetch: ${rss.status}`)
 
           let {
-            feed: { link },
             items
           } = await rss.json()
 
@@ -76,7 +75,7 @@
               new Date(item.pubDate) > new Date(startDate)
           )
           if (items.length && items[0]?.title) {
-            feeds.push({ link, items })
+            feeds.push({ link: URL, items })
             feeds = feeds
             // console.log('==================final=====================', feeds,'==================final=====================')
           }
