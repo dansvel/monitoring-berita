@@ -155,7 +155,7 @@ read more about this project at
           </tr>
         {/each}
       </tbody>
-      <p>&nbsp;</p>
+      <td colspan="5">&nbsp;</td>
     {/if}
   {:else}
     <thead>
