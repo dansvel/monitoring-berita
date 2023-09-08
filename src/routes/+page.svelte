@@ -1,5 +1,6 @@
 <script>
   let URLs = [
+    'cuplik.com',
     'beritanyainfo.com',
     'bidiknasional.com',
     'ciremaitoday.com',
@@ -24,7 +25,6 @@
     'mediasuaramabes.com',
     'min.co.id',
     'mabesbharindo.com',
-    'cuplik.com'
 
     //// 'diskominfo.indramayukab.go.id',
     //// 'indramayukab.go.id',
