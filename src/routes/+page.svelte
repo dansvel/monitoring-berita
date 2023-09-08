@@ -62,7 +62,7 @@
       Array.from(new Set(URLs)).map(async URL => {
         try {
           const rss = await fetch(
-            'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2F' + URL + '%2Ffeed%2F'
+            'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2F' + URL + '%2Ffeed%2F&api_key=np3geyfdtctlp3xn6z7h1zqwlfjvkpcksqpj8rh0&order_by=pubDate&order_dir=asc'
           )
           if (!rss.ok) throw new Error(`Failed to fetch: ${rss.status}`)
 
