@@ -23,7 +23,8 @@
     'kreatorjabar.com',
     'mediasuaramabes.com',
     'min.co.id',
-    'mabesbharindo.com'
+    'mabesbharindo.com',
+    'cuplik.com'
 
     //// 'diskominfo.indramayukab.go.id',
     //// 'indramayukab.go.id',
