@@ -45,7 +45,7 @@
   $: {
     dayoff = dayoff < 0 ? 0 : dayoff > 2 ? 2 : dayoff
     startDate = new Date()
-    startDate.setDate(startDate.getDate() - (getDayName(today) === 'Senin' ? 4 : 1) - dayoff)
+    startDate.setDate(startDate.getDate() - (getDayName(today) === 'Senin' ? 3 : 1) - dayoff)
     startDate.setHours(18, 0, 0)
     startDate = new Date(startDate)
   }
