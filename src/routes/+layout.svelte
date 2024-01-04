@@ -1,13 +1,13 @@
 <svelte:head>
-  <!--  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">-->
+	<!--  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">-->
 </svelte:head>
 
 <main class="">
-  <slot />
+	<slot />
 </main>
 
 <style>
-  .container {
-    margin: 2rem;
-  }
+	.container {
+		margin: 2rem;
+	}
 </style>
