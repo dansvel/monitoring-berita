@@ -8,6 +8,7 @@ untuk saat ini yang penting jalan aja dulu,,
 
 - [ ] styling
 - [ ] loading indicator
+- [x] input tanggal cek berita
 - [ ] inputan diganti jadi range tanggal aja
 - [ ] tambahkan inputan keyword
 - [ ] multiple keyword

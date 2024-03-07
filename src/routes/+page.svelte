@@ -39,16 +39,6 @@
 		return date.toLocaleDateString('id-ID', { weekday: 'long' })
 	}
 
-	let dayoff = 0
-	const today = new Date()
-	let startDate
-	$: {
-		dayoff = dayoff < 0 ? 0 : dayoff > 2 ? 2 : dayoff
-		startDate = new Date()
-		startDate.setDate(startDate.getDate() - (getDayName(today) === 'Senin' ? 3 : 1) - dayoff)
-		startDate.setHours(18, 0, 0)
-		startDate = new Date(startDate)
-	}
 	export const localDateTime = new Intl.DateTimeFormat('id-ID', {
 		year: 'numeric',
 		month: 'short',
@@ -57,7 +47,8 @@
 		minute: 'numeric'
 	})
 
-	const fetchNews = async () => {
+	const fetchNews = async (mulai, selesai) => {
+		feeds = []
 		const response = await Promise.all(
 			Array.from(new Set(URLs)).map(async URL => {
 				try {
@@ -73,7 +64,8 @@
 					items = await items.filter(
 						item =>
 							item.description.match(/indramayu/gi) !== null &&
-							new Date(item.pubDate) > new Date(startDate)
+							new Date(item.pubDate) > new Date(mulai).setHours(18, 0, 0) &&
+							new Date(item.pubDate) < new Date(selesai).setHours(18, 0, 0)
 					)
 					if (items.length && items[0]?.title) {
 						feeds.push({ link: URL, items })
@@ -88,25 +80,54 @@
 		// console.log(response)
 	}
 
+	const getDate = date => {
+		const now = date ? new Date(date) : new Date()
+		const year = now.getFullYear()
+		const month = String(now.getMonth() + 1).padStart(2, '0') // Months are zero-based
+		const day = String(now.getDate()).padStart(2, '0')
+		return `${year}-${month}-${day}`
+	}
+
+	const hitungMulai = (tanggal, libur) => {
+		tanggal = tanggal ? new Date(tanggal) : new Date()
+		tanggal.setDate(tanggal.getDate() - (getDayName(tanggal) === 'Senin' ? 3 : 1) - libur)
+		return getDate(tanggal)
+	}
+
+	let tanggal = getDate()
+
+	let libur = 0
+
+	$: mulai = hitungMulai(tanggal, libur)
+	// $: sampai = getDate(tanggal)
+
 	// $: console.log(feeds)
 </script>
 
-<!--<input type="number" bind:value={dayoff}  />-->
-<select bind:value={dayoff}>
-	<option value={0} selected>0</option>
-	<option value={1}>1</option>
-	<option value={2}>2</option>
-</select>
-<p>
-	mulai:
-	<time>{localDateTime.format(startDate)}</time>
-</p>
-<p>
-	sampai:
-	<time>{localDateTime.format(new Date().setHours(18, 0, 0))}</time>
-</p>
+<hr />
+<form action="">
+	<div>
+		<select bind:value={libur}>
+			<option value={0} selected>0</option>
+			<option value={1}>1</option>
+			<option value={2}>2</option>
+		</select>
+		<label for="">hari terakhir</label>
+	</div>
 
-<button on:click={fetchNews}>get berita</button>
+	<div>
+		<label for="">tanggal monitoring</label>
+		<input type="date" bind:value={tanggal} />
+	</div>
+
+	<div>
+		<button on:click={fetchNews(mulai, tanggal)}>get berita</button>
+	</div>
+</form>
+{tanggal}
+<p>{mulai} - {tanggal}</p>
+<hr />
+
 <br />
 read more about this project at
 <a href="https://github.com/dansvel/monitoring-berita"
