@@ -1,7 +1,7 @@
 <script>
 	let URLs = [
 		'cuplik.com',
-		'beritanyainfo.com',
+		// 'beritanyainfo.com',
 		'bidiknasional.com',
 		'ciremaitoday.com',
 		'demokratis.co.id',
